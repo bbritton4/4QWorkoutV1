@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="4 Quarters">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>4 Quarters</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- HOME -->
+    <div id="screen-home" class="screen active">
+      <header class="home-header">
+        <h1 class="logo">4<span>Q</span></h1>
+        <p class="tagline">4 Rounds · 5 Exercises · All Out</p>
+      </header>
+      <div id="day-cards" class="day-cards"></div>
+    </div>
+
+    <!-- WARM-UP -->
+    <div id="screen-warmup" class="screen">
+      <div class="screen-top-bar">
+        <button class="back-btn" onclick="navigateTo('home')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span id="warmup-day-label" class="top-bar-title"></span>
+        <span id="warmup-counter" class="top-bar-right"></span>
+      </div>
+      <div id="warmup-content" class="warmup-content">
+        <div id="warmup-phase-label" class="phase-label"></div>
+        <div id="warmup-card" class="warmup-card">
+          <div id="warmup-thumb"></div>
+          <h2 id="warmup-name" class="warmup-name"></h2>
+          <p id="warmup-desc" class="warmup-desc"></p>
+          <div id="warmup-duration" class="warmup-duration"></div>
+          <div id="warmup-tutorial"></div>
+        </div>
+      </div>
+      <div class="warmup-footer">
+        <button id="warmup-prev-btn" class="warmup-nav-btn" onclick="warmupPrev()">Previous</button>
+        <button id="warmup-next-btn" class="warmup-nav-btn primary" onclick="warmupNext()">Next</button>
+      </div>
+    </div>
+
+    <!-- TIMER -->
+    <div id="screen-timer" class="screen">
+      <div id="timer-progress-bar" class="timer-progress-bar">
+        <div id="timer-progress-fill" class="timer-progress-fill"></div>
+      </div>
+      <div class="timer-top-info">
+        <button class="back-btn" onclick="confirmExit()">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <div id="timer-round-label" class="round-label"></div>
+        <div id="timer-effort" class="effort-label"></div>
+      </div>
+      <div class="timer-body">
+        <div id="timer-state-label" class="timer-state-label">WORK</div>
+        <div id="timer-countdown" class="timer-countdown">30</div>
+        <div id="timer-exercise-name" class="timer-exercise-name"></div>
+        <div id="timer-exercise-cue" class="timer-exercise-cue"></div>
+        <div id="timer-thumb-area" class="timer-thumb-area"></div>
+        <div id="timer-type-badge" class="type-badge"></div>
+        <div id="timer-dots" class="timer-dots"></div>
+        <div id="timer-next-exercise" class="timer-next-exercise"></div>
+      </div>
+      <div class="timer-controls">
+        <button id="btn-prev" class="control-btn" onclick="timerPrev()">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button id="btn-play" class="control-btn play-btn" onclick="timerToggle()">
+          <svg id="icon-play" width="36" height="36" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="icon-pause" width="36" height="36" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6zm8-14v14h4V5z"/></svg>
+        </button>
+        <button id="btn-skip" class="control-btn" onclick="timerSkip()">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- COOL-DOWN -->
+    <div id="screen-cooldown" class="screen">
+      <div class="screen-top-bar">
+        <button class="back-btn" onclick="navigateTo('home')">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <span class="top-bar-title">Cool Down</span>
+        <span class="top-bar-right"></span>
+      </div>
+      <div class="cooldown-hero">
+        <div class="cooldown-check">&#10003;</div>
+        <h2>Workout Complete</h2>
+        <p class="cooldown-subtitle">You crushed it. Time to recover.</p>
+      </div>
+      <div id="cooldown-list" class="cooldown-list"></div>
+      <div class="cooldown-footer">
+        <button class="warmup-nav-btn primary" onclick="navigateTo('home')">Finish</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
