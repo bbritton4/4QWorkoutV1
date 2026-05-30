@@ -510,7 +510,7 @@ html, body {
 .thumb-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 .thumb-placeholder {
@@ -524,23 +524,7 @@ html, body {
   color: var(--text-muted);
   letter-spacing: 2px;
 }
-.thumb-play-icon {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,.4);
-  opacity: 0;
-  transition: opacity .15s;
-}
-.thumb-wrap:active .thumb-play-icon,
-.thumb-wrap .thumb-play-icon { opacity: 1; }
-.thumb-play-icon svg {
-  width: 36px;
-  height: 36px;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,.4));
-}
+/* play overlay removed — local GIFs self-animate */
 
 .tutorial-btn {
   display: inline-flex;

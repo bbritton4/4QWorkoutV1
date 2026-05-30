@@ -8,33 +8,24 @@ let wakeLock = null;
 let autoStartTimeout = null;
 
 // ── THUMBNAILS ──
-function getYouTubeId(url) {
-  if (!url) return null;
-  const m = url.match(/(?:v=|\/shorts\/)([a-zA-Z0-9_-]{11})/);
-  return m ? m[1] : null;
-}
-
-function getThumbnailUrl(tutorialUrl) {
-  const id = getYouTubeId(tutorialUrl);
-  return id ? 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg' : null;
-}
-
 function getInitials(name) {
-  return name.split(/[\s\-·&()/]+/).filter(w => /^[a-zA-Z]/.test(w)).map(w => w[0]).join('').toUpperCase().slice(0, 3);
+  return name.split(/[\s\-·&()/]+/).filter(w => /^[a-zA-Z0-9]/.test(w)).map(w => w[0]).join('').toUpperCase().slice(0, 3);
 }
 
-const PLAY_SVG = '<svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg>';
+function getImageSrc(name) {
+  const file = IMAGE_MAP[name];
+  if (!file) return null;
+  return 'img/' + encodeURIComponent(file);
+}
+
 const TUTORIAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
 
-function thumbHTML(tutorialUrl, name, size) {
-  const imgUrl = getThumbnailUrl(tutorialUrl);
-  const inner = imgUrl
-    ? '<img src="' + imgUrl + '" alt="" loading="lazy"><div class="thumb-play-icon">' + PLAY_SVG + '</div>'
+function thumbHTML(tutorialUrl, name) {
+  const src = getImageSrc(name);
+  const inner = src
+    ? '<img src="' + src + '" alt="' + name.replace(/"/g, '&quot;') + '" loading="lazy">'
     : '<div class="thumb-placeholder">' + getInitials(name) + '</div>';
 
-  if (tutorialUrl) {
-    return '<a href="' + tutorialUrl + '" target="_blank" rel="noopener" class="thumb-wrap" style="display:block">' + inner + '</a>';
-  }
   return '<div class="thumb-wrap">' + inner + '</div>';
 }
 
@@ -74,16 +65,29 @@ function beepTransition() { beep(550, 150, 2, 200); }
 function beepRoundRest() { beep(440, 400, 3, 250); }
 
 // ── WAKE LOCK ──
+let wakeLockActive = false;
+
 async function requestWakeLock() {
+  wakeLockActive = true;
   try {
     if ('wakeLock' in navigator) {
       wakeLock = await navigator.wakeLock.request('screen');
+      wakeLock.addEventListener('release', () => { wakeLock = null; });
     }
   } catch (e) {}
 }
+
 function releaseWakeLock() {
+  wakeLockActive = false;
   if (wakeLock) { wakeLock.release(); wakeLock = null; }
 }
+
+// Re-acquire wake lock when returning to the app (iOS releases it on tab switch / lock screen)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && wakeLockActive && !wakeLock) {
+    requestWakeLock();
+  }
+});
 
 // ── NAVIGATION ──
 function navigateTo(screen) {
@@ -128,6 +132,7 @@ function selectDay(id) {
   warmupIndex = 0;
   renderWarmup();
   navigateTo('warmup');
+  requestWakeLock();
 }
 
 // ── WARM-UP SCREEN ──
