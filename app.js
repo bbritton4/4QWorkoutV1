@@ -14,8 +14,8 @@ function getInitials(name) {
 
 function getImageSrc(name) {
   const file = IMAGE_MAP[name];
-  if (!file) return null;
-  return 'img/' + encodeURIComponent(file);
+  if (!file || !currentWorkout) return null;
+  return currentWorkout.id + '/' + encodeURIComponent(file);
 }
 
 const TUTORIAL_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>';
