@@ -6,6 +6,7 @@ let timerInterval = null;
 let audioCtx = null;
 let wakeLock = null;
 let autoStartTimeout = null;
+let lastTimerExKey = null; // tracks displayed exercise to avoid GIF reload
 
 // ── THUMBNAILS ──
 function getInitials(name) {
@@ -211,6 +212,7 @@ function computeElapsed(state) {
 }
 
 function startWorkoutTimer() {
+  lastTimerExKey = null;
   timerState = {
     round: 0,
     exercise: 0,
@@ -273,7 +275,10 @@ function renderTimer() {
   const cueEl = document.getElementById('timer-exercise-cue');
   const badgeEl = document.getElementById('timer-type-badge');
 
-  const thumbArea = document.getElementById('timer-thumb-area');
+  // Determine which exercise to display
+  let displayEx = null;
+  let exKey = '';
+
   if (s.phase === 'roundRest') {
     nameEl.textContent = 'Rest';
     cueEl.textContent = 'Breathe and recover';
@@ -281,12 +286,8 @@ function renderTimer() {
     badgeEl.textContent = '';
     badgeEl.style.display = 'none';
     const nr = workout.rounds[s.round + 1];
-    if (nr) {
-      const nex = nr.exercises[0];
-      thumbArea.innerHTML = thumbHTML(nex.tutorial, nex.name) + tutorialBtnHTML(nex.tutorial);
-    } else {
-      thumbArea.innerHTML = '';
-    }
+    if (nr) { displayEx = nr.exercises[0]; }
+    exKey = 'rest-' + s.round;
   } else if (s.phase === 'transition') {
     const nextEx = round.exercises[s.exercise + 1];
     nameEl.textContent = nextEx.name;
@@ -294,7 +295,8 @@ function renderTimer() {
     badgeEl.style.display = '';
     badgeEl.className = 'type-badge ' + nextEx.type;
     badgeEl.textContent = nextEx.type === 'plate' ? '25lb Plate' : 'Bodyweight';
-    thumbArea.innerHTML = thumbHTML(nextEx.tutorial, nextEx.name) + tutorialBtnHTML(nextEx.tutorial);
+    displayEx = nextEx;
+    exKey = s.round + '-' + (s.exercise + 1);
   } else {
     const ex = round.exercises[s.exercise];
     nameEl.textContent = ex.name;
@@ -302,7 +304,19 @@ function renderTimer() {
     badgeEl.style.display = '';
     badgeEl.className = 'type-badge ' + ex.type;
     badgeEl.textContent = ex.type === 'plate' ? '25lb Plate' : 'Bodyweight';
-    thumbArea.innerHTML = thumbHTML(ex.tutorial, ex.name) + tutorialBtnHTML(ex.tutorial);
+    displayEx = ex;
+    exKey = s.round + '-' + s.exercise;
+  }
+
+  // Only rebuild thumbnail when exercise changes (prevents GIF restart on every tick)
+  if (exKey !== lastTimerExKey) {
+    lastTimerExKey = exKey;
+    const thumbArea = document.getElementById('timer-thumb-area');
+    if (displayEx) {
+      thumbArea.innerHTML = thumbHTML(displayEx.tutorial, displayEx.name) + tutorialBtnHTML(displayEx.tutorial);
+    } else {
+      thumbArea.innerHTML = '';
+    }
   }
 
   // Dots
