@@ -309,7 +309,7 @@ const IMAGE_MAP = {
   'Thread the Needle': 'Thread the Needle.gif',
   'Dead Bug (Slow)': 'Dead Bug (Slow).gif',
   'Bird Dog Hold': 'Bird Dog Hold.webp',
-  'Plank 10-sec Hold': 'Plank 10-sec Hold.gif',
+  'Plank 10-sec Hold': 'Plank 10-sec Hold.jpg',
   // Monday R1–R4
   'Push-up': 'Push-up.gif',
   'Plate Overhead Press': 'Plate Overhead Press.gif',
@@ -353,7 +353,7 @@ const IMAGE_MAP = {
   'Step-up (Chair)': 'Step-up (Chair).gif',
   'Speed Skater': 'Speed Skater.gif',
   // Wednesday R1–R4
-  'Plank': 'Plank.gif',
+  'Plank': 'Plank.jpg',
   'Superman Hold': 'Superman Hold.gif',
   'Plate Bent-over Row': 'Plate Bent-over Row.gif',
   'Dead Bug': 'Dead Bug.gif',
